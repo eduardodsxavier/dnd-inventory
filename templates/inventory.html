@@ -1,0 +1,128 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Inventario
+{% endblock %}
+
+{% block main %}
+
+    <table class="table">
+        <h2>Armas</h2>
+        <thead>
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Preço</th>
+                <th scope="col">Peso</th>
+                <th scope="col">Dano</th>
+                <th scope="col">Propriedades</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">
+                    <form action="additem" method="POST">
+                        <div class="col-auto">
+                        <label class="visually-hidden" for="autoSizingSelect">weapons</label>
+                            <select class="form-select" id="autoSizingSelect">
+                                <option selected>armas</option>
+                                {% for weapon in weapons %}
+                                    <option value="{{weapon.id}}" name="weapon">{{weapon.name}}</option>
+                                {% endfor %}
+                            </select>
+                            <input value="{{request.args['char_id']}}" name="char_id">
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-secondary">addicionar</button>
+                        </div>
+                    </form>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for weapon in charWeapons %}
+                <tr>
+                    <th scope="row">{{weapon.name}}</th>
+                    <td>{{weapon.price}}</td>
+                    <td>{{weapon.weight}} Kg</td>
+                    <td>{{weapon.damage}}</td>
+                    <td>{{weapon.description}}</td>
+                    <td>{{weapon.quantity}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <table class="table">
+        <h2>Armaduras</h2>
+        <thead>
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Preço</th>
+                <th scope="col">Peso</th>
+                <th scope="col">CA</th>
+                <th scope="col">Propriedades</th>
+                <th scope="col">Quantidade</th>
+                <th>
+                    <div class="col-auto">
+                        <label class="visually-hidden" for="autoSizingSelect">armors</label>
+                        <select class="form-select" id="autoSizingSelect">
+                            <option selected>armaduras</option>
+                            {% for armor in armors %}
+                                <option value="{{armor.id}}">{{armor.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for armor in charArmors %}
+                <tr>
+                    <th scope="row">{{armor.name}}</th>
+                    <td>{{armor.price}}</td>
+                    <td>{{armor.weight}} Kg</td>
+                    <td>{{armor.armor_class}}</td>
+                    <td>{{armor.properties}}</td>
+                    <td>{{armor.quantity}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <table class="table">
+        <h2>Itens</h2>
+        <thead>
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Preço</th>
+                <th scope="col">Peso</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Dano</th>
+                <th scope="col">CA</th>
+                <th scope="col">Quantidade</th>
+                <th>
+                    <form>
+                        <div class="col-auto">
+                            <label class="visually-hidden" for="autoSizingSelect">items</label>
+                            <select class="form-select" id="autoSizingSelect">
+                                <option selected>itens</option>
+                                {% for item in items %}
+                                    <option value="{{item.id}}" name="item">{{item.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            <tr>
+                {% for item in charItems %}
+                    <th scope="row">{{item.name}}</th>
+                    <td>{{item.price}}</td>
+                    <td>{{item.weight}} Kg</td>
+                    <td>{{item.description}}</td>
+                    <td>{{item.damage}}</td>
+                    <td>{{item.armor_class}}</td>
+                    <td>{{item.quantity}}</td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}
