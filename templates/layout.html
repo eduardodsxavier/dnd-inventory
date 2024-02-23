@@ -31,9 +31,9 @@
                                 {% for character in session["characters"] %}
                                     <li><a class="dropdown-item" href="/inventory?char_id={{character.id}}">{{character.name}}</a></li>
                                 {% endfor %}
+                                <li><a class="dropdown-item" href="/createchar">Create character</a></li>
                             </ul>
                         </li>
-                        <a class="nav-link disabled" aria-disabled="true">Create character</a>
                     </div>
                     <ul class="navbar-nav ms-auto mt-2">
                         <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>

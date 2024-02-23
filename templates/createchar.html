@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Criar personagem
+{% endblock %}
+
+{% block main %}
+
+    {% if alert %}
+        <div class="alert alert-danger" role="alert">
+            {{alert}}
+        </div>
+    {% endif %}
+    <form action="/createchar" method="post">
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="charName" placeholder="Nome" type="text">
+        </div>
+        <button class="btn btn-primary" type="submit">Criar</button>
+    </form>
+
+{% endblock %}

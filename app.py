@@ -108,7 +108,7 @@ def register():
     return render_template("register.html")
 
 
-@app.route("/inventory")
+@app.route("/inventory", methods=["GET","POST"])
 @login_required
 def inventory():
 
@@ -117,7 +117,32 @@ def inventory():
         char_id = request.args["char_id"]
     else:
         return redirect("/")
+    
+    if request.method == "POST":
 
+        # see if was given the values to add a new item to the inventory
+        item_id = request.form.get("item_id")
+        try:
+            quantity = int(request.form.get("quantity"))
+        except:
+            return redirect(f"/inventory?char_id={char_id}")
+
+        if item_id == "0":
+            return redirect(f"/inventory?char_id={char_id}")
+        # if the character have thap item in the inventory 
+        if len(db.execute("SELECT * FROM inventory WHERE char_id = ? AND item_id = ?", char_id, item_id)) != 0:
+            # calculate the new item quantity in the char inventory  
+            quantity = quantity + db.execute("SELECT * FROM inventory WHERE char_id = ? AND item_id = ?",
+                                            char_id, item_id)[0]["quantity"]
+            # change the quantity of that item in the character inventory
+            db.execute("UPDATE inventory SET quantity = ? WHERE char_id = ? AND item_id = ?",
+                        quantity, char_id, item_id)
+        # if the character dosn't have that item in the inventory add the item  
+        else:
+            db.execute("INSERT INTO inventory(char_id, item_id, quantity) VALUES(?, ?, ?)", char_id, item_id, quantity)
+        
+        return redirect(f"/inventory?char_id={char_id}")
+    
     # open the arrays for the diferents items types
     charWeapons = []
     charArmors = []
@@ -141,47 +166,23 @@ def inventory():
         else:
             charItems.append(item)
 
-        allitems = db.execute("SELECT * FROM items;")
-
-        weapons = []
-        armors = []
-        items = []
-
-        for item in allitems:
-            if item["type"] == "weapon":
-                weapons.append(item)
-            if item["type"] == "armor":
-                armors.append(item)
-            if item["type"] == "item":
-                items.append(item)
-
-    return render_template("inventory.html", charWeapons=charWeapons, charArmors=charArmors, charItems=charItems, weapons=weapons, armors=armors, items=items)
+    return render_template("inventory.html", charWeapons=charWeapons, charArmors=charArmors, charItems=charItems, items=db.execute("SELECT * FROM items"))
 
 
-@app.route("/additem")
+@app.route("/createchar", methods=["GET","POST"])
 @login_required
-def additem():
+def createchar():
     if request.method == "POST":
-        if request.form.get("weapon"):
-            item = request.form.get("weapon")
-        elif request.form.get("armor"):
-            item = request.form.get("armor")
-        elif request.form.get("item"):
-            item = request.form.get("item")
-        else:
-            return redirect("/")
+        charName = request.form.get("charName")
 
-        char_id = request.args["char_id"]
+        if not charName:
+            return render_template("createchar.html", alert="Must provide the character name")
 
-        itemInInventory = db.execute("SELECT * FROM inventory WHERE char_id = ? AND item_id = ?", char_id, item["id"])
+        db.execute("INSERT INTO characters(user_id, name) VALUES(?, ?)", session["user_id"], charName)
 
-        if len(itemInInventory) != 0:
-            db.execute("UPDATE inventory SET quantity = ? WHERE char_id = ? AND item_id = ?",
-                       itemInInventory[0]["quantity"] + 1, char_id, item["id"])
-        else:
-            db.execute("INSERT INTO inventory(char_id, item_id) VALUES(?, ?)", char_id, item_id)
+        return redirect("/")
+    return render_template("createchar.html")
 
-        return redirect("/inventory")
 
 @app.route("/logout")
 @login_required
