@@ -120,20 +120,29 @@ def inventory():
     
     if request.method == "POST":
 
-        # see if was given the values to add a new item to the inventory
+        # pick the item id and quantity of the item to be add in the inventory
         item_id = request.form.get("item_id")
+
+        # verify if quantity was given as a integer
         try:
             quantity = int(request.form.get("quantity"))
         except:
             return redirect(f"/inventory?char_id={char_id}")
 
-        if item_id == "0":
+        # see if was pulled a valid item id 
+        if item_id == "invalid":
             return redirect(f"/inventory?char_id={char_id}")
+        
         # if the character have thap item in the inventory 
         if len(db.execute("SELECT * FROM inventory WHERE char_id = ? AND item_id = ?", char_id, item_id)) != 0:
             # calculate the new item quantity in the char inventory  
             quantity = quantity + db.execute("SELECT * FROM inventory WHERE char_id = ? AND item_id = ?",
                                             char_id, item_id)[0]["quantity"]
+            if quantity < 0:
+                return redirect(f"/inventory?char_id={char_id}")
+            elif quantity == 0:
+                db.execute("DELETE FROM inventory WHERE char_id = ? AND item_id = ?", char_id, item_id)
+                return redirect(f"/inventory?char_id={char_id}")
             # change the quantity of that item in the character inventory
             db.execute("UPDATE inventory SET quantity = ? WHERE char_id = ? AND item_id = ?",
                         quantity, char_id, item_id)
