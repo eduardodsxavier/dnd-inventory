@@ -10,7 +10,6 @@
         <h2>Personagens</h2>
         <thead>
             <tr>
-                <th scope="col">Id</th>
                 <th scope="col">Nome</th>
                 <th scope="col"></th>
             </tr>
@@ -18,8 +17,7 @@
         <tbody class="table-group-divider">
             {% for character in session["characters"] %}
                 <tr>
-                    <th scope="row">{{character.id}}</th>
-                    <td>{{character.name}}</td>
+                    <th scope="row">{{character.name}}</th>
                     <td>
                         <a class="icon-link" href="/inventory?char_id={{character.id}}">
                             <svg class="bi" aria-hidden="true"><use xlink:href="/inventory?char_id={{character.id}}"></use></svg>

@@ -127,7 +127,7 @@ def inventory():
         try:
             quantity = int(request.form.get("quantity"))
         except:
-            return redirect(f"/inventory?char_id={char_id}")
+            quantity = 1
 
         # see if was pulled a valid item id 
         if item_id == "invalid":
@@ -151,6 +151,9 @@ def inventory():
             db.execute("INSERT INTO inventory(char_id, item_id, quantity) VALUES(?, ?, ?)", char_id, item_id, quantity)
         
         return redirect(f"/inventory?char_id={char_id}")
+    
+    if len(db.execute("SELECT * FROM characters WHERE user_id = ? AND id = ?", session["user_id"], char_id)) != 1:
+        return redirect("/")
     
     # open the arrays for the diferents items types
     charWeapons = []
