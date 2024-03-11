@@ -1,0 +1,38 @@
+@charset "UTC-8";
+
+:root
+{
+    --text: #592d1d;
+    --background: #f2eade;
+    --primary: #f2612c;
+    --secondary: #f2b05f;
+    --accent: #a42d2d;
+}
+
+body
+{
+    background-color: var(--background);
+}
+
+.navbar
+{
+    background-color: var(--background) !important;
+}
+
+input, select
+{
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    border: 1px solid var(--accent) !important;
+}
+
+thead > tr > th
+{
+    color: var(--text) !important;
+    background-color: var(--secondary) !important;
+}
+
+h2, a, td, th
+{
+    color: var(--text) !important;
+    background-color: var(--background) !important;
+}
