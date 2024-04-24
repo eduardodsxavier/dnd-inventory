@@ -1,8 +1,7 @@
-### web dnd inventory
-
+## web dnd inventory
 a web page create to work as a dnd inventory.
 
-## technologies utilizeds 
+### technologies utilizeds 
 the project use the lenguages: html, css, python.
 
 utilize the frameworks flask and bootstrap.
